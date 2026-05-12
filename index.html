@@ -1,0 +1,507 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Ven_ Entertainment — Free & Legal Dashboard</title>
+<style>
+  :root{
+    --bg:#0b0d12;
+    --bg-soft:#11141b;
+    --panel:#161a23;
+    --panel-2:#1c2230;
+    --line:#252b3a;
+    --text:#e7ebf3;
+    --muted:#9aa3b6;
+    --accent:#7c5cff;
+    --accent-2:#22d3ee;
+    --good:#22c55e;
+    --warn:#f59e0b;
+    --pill:#222838;
+    --shadow:0 10px 30px rgba(0,0,0,.35);
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Inter,Helvetica,Arial,sans-serif;line-height:1.5;-webkit-font-smoothing:antialiased}
+  a{color:var(--accent-2);text-decoration:none}
+  a:hover{text-decoration:underline}
+
+  header.hero{
+    position:relative;
+    padding:56px 28px 28px;
+    background:
+      radial-gradient(1200px 500px at 80% -10%, rgba(124,92,255,.25), transparent 60%),
+      radial-gradient(900px 400px at 0% 0%, rgba(34,211,238,.18), transparent 60%),
+      linear-gradient(180deg,#0d1018,#0b0d12 70%);
+    border-bottom:1px solid var(--line);
+  }
+  .brand{display:flex;align-items:center;gap:12px;margin-bottom:18px}
+  .logo{
+    width:38px;height:38px;border-radius:10px;
+    background:linear-gradient(135deg,var(--accent),var(--accent-2));
+    display:grid;place-items:center;font-weight:800;color:#0b0d12;
+    box-shadow:var(--shadow);
+  }
+  .brand h1{margin:0;font-size:22px;letter-spacing:.3px}
+  .brand small{display:block;color:var(--muted);font-weight:500}
+
+  .hero h2{font-size:34px;margin:8px 0 8px;max-width:900px;line-height:1.15}
+  .hero p.lede{color:var(--muted);max-width:780px;margin:0 0 18px;font-size:15.5px}
+  .tag-row{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
+  .tag{background:var(--pill);color:var(--muted);padding:6px 10px;border-radius:999px;font-size:12.5px;border:1px solid var(--line)}
+  .tag.green{color:#9ef0b6;border-color:#1f3a2a}
+  .tag.violet{color:#cbbcff;border-color:#2c2350}
+
+  nav.toc{
+    margin:22px auto 0;max-width:1200px;
+    display:flex;flex-wrap:wrap;gap:8px;
+  }
+  nav.toc a{
+    background:var(--panel);border:1px solid var(--line);
+    color:var(--text);padding:8px 12px;border-radius:10px;font-size:13.5px;
+  }
+  nav.toc a:hover{border-color:var(--accent);text-decoration:none}
+
+  main{max-width:1200px;margin:0 auto;padding:28px}
+  section.cat{margin:36px 0 8px}
+  section.cat h3{
+    margin:0 0 4px;font-size:22px;letter-spacing:.2px;display:flex;align-items:center;gap:10px;
+  }
+  section.cat .ico{
+    width:30px;height:30px;border-radius:8px;
+    background:linear-gradient(135deg,#2a2f44,#1a1f2e);
+    display:grid;place-items:center;font-size:16px;border:1px solid var(--line);
+  }
+  section.cat .sub{color:var(--muted);margin:0 0 16px;font-size:14.5px}
+
+  .grid{
+    display:grid;gap:14px;
+    grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
+  }
+  .card{
+    background:linear-gradient(180deg,var(--panel),var(--panel-2));
+    border:1px solid var(--line);border-radius:14px;
+    padding:16px 16px 14px;display:flex;flex-direction:column;gap:8px;
+    transition:transform .15s ease, border-color .15s ease;
+    box-shadow:var(--shadow);
+  }
+  .card:hover{transform:translateY(-2px);border-color:#33405a}
+  .card .top{display:flex;justify-content:space-between;align-items:flex-start;gap:8px}
+  .card h4{margin:0;font-size:16.5px}
+  .card .pill{
+    background:var(--pill);color:var(--muted);
+    font-size:11.5px;padding:3px 8px;border-radius:999px;border:1px solid var(--line);
+    white-space:nowrap;
+  }
+  .card .best{color:#cbbcff;font-size:13px;margin:0}
+  .card .pro{color:var(--text);font-size:14px;margin:6px 0 0}
+  .card .pro b{color:#9ef0b6}
+  .card .link{margin-top:auto;padding-top:10px;font-size:13px;color:var(--accent-2);word-break:break-all}
+
+  footer{
+    margin-top:48px;padding:28px;border-top:1px solid var(--line);
+    color:var(--muted);font-size:13px;text-align:center;
+  }
+  .legend{
+    display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin-bottom:10px;
+  }
+  .legend span{background:var(--panel);border:1px solid var(--line);padding:5px 9px;border-radius:8px}
+
+  @media (max-width:640px){
+    .hero h2{font-size:26px}
+    main{padding:18px}
+  }
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="brand">
+    <div class="logo">V</div>
+    <div>
+      <h1>Ven_ Entertainment</h1>
+      <small>Your free &amp; legal media command center</small>
+    </div>
+  </div>
+  <h2>Build a premium entertainment system — without paying for one.</h2>
+  <p class="lede">
+    Forty hand-picked services across eight categories. Every platform is free, legal,
+    and worth a permanent slot on your laptop. Each card tells you what it's best for
+    and how to use it like you would a paid premium tier.
+  </p>
+  <div class="tag-row">
+    <span class="tag green">100% free + legal</span>
+    <span class="tag violet">8 categories</span>
+    <span class="tag">40 curated platforms</span>
+    <span class="tag">No accounts required for most</span>
+  </div>
+
+  <nav class="toc" aria-label="Categories">
+    <a href="#movies">🎬 Movies</a>
+    <a href="#tv">📺 TV Shows</a>
+    <a href="#music">🎵 Music</a>
+    <a href="#podcasts">🎙️ Podcasts</a>
+    <a href="#books">📚 Books</a>
+    <a href="#games">🎮 Games</a>
+    <a href="#docs">🎞️ Documentaries</a>
+    <a href="#learning">🧠 Learning</a>
+  </nav>
+</header>
+
+<main>
+
+<!-- MOVIES -->
+<section class="cat" id="movies">
+  <h3><span class="ico">🎬</span> Movies</h3>
+  <p class="sub">Ad-supported streamers and public-domain libraries that rival paid services.</p>
+  <div class="grid">
+
+    <article class="card">
+      <div class="top"><h4>Tubi</h4><span class="pill">Ad-supported</span></div>
+      <p class="best"><b>Best for:</b> Hollywood catalog depth, cult classics, anime, foreign films.</p>
+      <p class="pro"><b>Premium move:</b> Make a free account so your watchlist and resume-watching sync — Tubi then behaves like Netflix, just with short ad breaks.</p>
+      <div class="link">tubitv.com</div>
+    </article>
+
+    <article class="card">
+      <div class="top"><h4>Pluto TV</h4><span class="pill">Live + on-demand</span></div>
+      <p class="best"><b>Best for:</b> Linear "channel surfing" — 250+ themed channels (action, horror, classics).</p>
+      <p class="pro"><b>Premium move:</b> Pin your 6 favorite channels and treat the guide as your cable replacement; jump to on-demand only when nothing's on.</p>
+      <div class="link">pluto.tv</div>
+    </article>
+
+    <article class="card">
+      <div class="top"><h4>Plex Free Movies</h4><span class="pill">Library + AVOD</span></div>
+      <p class="best"><b>Best for:</b> A single library that mixes free streaming with your own media.</p>
+      <p class="pro"><b>Premium move:</b> Use Plex's universal Watchlist + Discover to track what's on every service at once, then play the free ones in-app.</p>
+      <div class="link">plex.tv/watch-free</div>
+    </article>
+
+    <article class="card">
+      <div class="top"><h4>Kanopy</h4><span class="pill">Library card</span></div>
+      <p class="best"><b>Best for:</b> Criterion-tier indie, arthouse, and award-winning international cinema.</p>
+      <p class="pro"><b>Premium move:</b> Log in with your public library or university card — you get a monthly credit pool, no ads, and 4K on supported titles.</p>
+      <div class="link">kanopy.com</div>
+    </article>
+
+    <article class="card">
+      <div class="top"><h4>Internet Archive Feature Films</h4><span class="pill">Public domain</span></div>
+      <p class="best"><b>Best for:</b> Classic Hollywood, noir, silent films, restored prints.</p>
+      <p class="pro"><b>Premium move:</b> Download originals in MP4 for offline viewing — fully legal, no DRM, perfect for travel.</p>
+      <div class="link">archive.org/details/feature_films</div>
+    </article>
+  </div>
+</section>
+
+<!-- TV SHOWS -->
+<section class="cat" id="tv">
+  <h3><span class="ico">📺</span> TV Shows</h3>
+  <p class="sub">Catch-up portals from major networks plus ad-supported on-demand giants.</p>
+  <div class="grid">
+
+    <article class="card">
+      <div class="top"><h4>The Roku Channel</h4><span class="pill">Free, web + app</span></div>
+      <p class="best"><b>Best for:</b> Network sitcoms, reality TV, and exclusive Roku Originals.</p>
+      <p class="pro"><b>Premium move:</b> Use the "Live TV" guide for free news/sports channels; add favorites to mimic a DVR shelf.</p>
+      <div class="link">therokuchannel.roku.com</div>
+    </article>
+
+    <article class="card">
+      <div class="top"><h4>Freevee (Amazon)</h4><span class="pill">Amazon-free tier</span></div>
+      <p class="best"><b>Best for:</b> Bingeable network drama, full procedural runs (Bosch spin-offs etc.).</p>
+      <p class="pro"><b>Premium move:</b> Sign in with any Amazon account so progress syncs across web, Fire TV, and phones like Prime.</p>
+      <div class="link">amazon.com/adlp/freevee</div>
+    </article>
+
+    <article class="card">
+      <div class="top"><h4>PBS</h4><span class="pill">Public broadcaster</span></div>
+      <p class="best"><b>Best for:</b> Masterpiece dramas, Frontline, NOVA, kids' programming.</p>
+      <p class="pro"><b>Premium move:</b> Some episodes go member-only — pair with a small local PBS membership for unlimited library access.</p>
+      <div class="link">pbs.org</div>
+    </article>
+
+    <article class="card">
+      <div class="top"><h4>CW (free with ads)</h4><span class="pill">Network site</span></div>
+      <p class="best"><b>Best for:</b> Current-season episodes of CW dramas the day after they air.</p>
+      <p class="pro"><b>Premium move:</b> No login needed — bookmark just your shows' pages so it acts like a personal episode tracker.</p>
+      <div class="link">cwtv.com</div>
+    </article>
+
+    <article class="card">
+      <div class="top"><h4>Crackle</h4><span class="pill">Ad-supported</span></div>
+      <p class="best"><b>Best for:</b> Older Sony shows, action originals, and complete series in one place.</p>
+      <p class="pro"><b>Premium move:</b> Sort by "Just Added" weekly; queue full series so the autoplay carries you binge-style.</p>
+      <div class="link">crackle.com</div>
+    </article>
+  </div>
+</section>
+
+<!-- MUSIC -->
+<section class="cat" id="music">
+  <h3><span class="ico">🎵</span> Music</h3>
+  <p class="sub">From free Spotify tiers to artist-owned platforms and curated radio.</p>
+  <div class="grid">
+
+    <article class="card">
+      <div class="top"><h4>Spotify Free</h4><span class="pill">Web + app</span></div>
+      <p class="best"><b>Best for:</b> Discovery — algorithmic playlists, Daily Mixes, Discover Weekly.</p>
+      <p class="pro"><b>Premium move:</b> On desktop you can pick any track on-demand for free — pin Spotify as a web app and use it like the paid tier.</p>
+      <div class="link">spotify.com</div>
+    </article>
+
+    <article class="card">
+      <div class="top"><h4>YouTube Music</h4><span class="pill">Ad-supported</span></div>
+      <p class="best"><b>Best for:</b> Rare live sets, remixes, and the world's deepest catalog of uploads.</p>
+      <p class="pro"><b>Premium move:</b> Build your own "Liked" library; use the YouTube Music web app fullscreen for a clean now-playing experience.</p>
+      <div class="link">music.youtube.com</div>
+    </article>
+
+    <article class="card">
+      <div class="top"><h4>Bandcamp</h4><span class="pill">Artist-direct</span></div>
+      <p class="best"><b>Best for:</b> Indie, experimental, and supporting artists with full-stream previews.</p>
+      <p class="pro"><b>Premium move:</b> Follow artists you love — every release surfaces in your feed; "name your price" often = free downloads.</p>
+      <div class="link">bandcamp.com</div>
+    </article>
+
+    <article class="card">
+      <div class="top"><h4>SoundCloud</h4><span class="pill">Free tier</span></div>
+      <p class="best"><b>Best for:</b> New artists, DJ mixes, remix culture, podcasts-as-music.</p>
+      <p class="pro"><b>Premium move:</b> Follow 20–30 tastemakers; the "Stream" feed becomes a real-time underground radio.</p>
+      <div class="link">soundcloud.com</div>
+    </article>
+
+    <article class="card">
+      <div class="top"><h4>Radio Garden</h4><span class="pill">Worldwide radio</span></div>
+      <p class="best"><b>Best for:</b> Live radio from any city on Earth — spin the globe, drop in.</p>
+      <p class="pro"><b>Premium move:</b> Save 5 cities in different time zones — instant mood/lighting changes through the day.</p>
+      <div class="link">radio.garden</div>
+    </article>
+  </div>
+</section>
+
+<!-- PODCASTS -->
+<section class="cat" id="podcasts">
+  <h3><span class="ico">🎙️</span> Podcasts</h3>
+  <p class="sub">Open ecosystems — no platform lock-in, every show, every device.</p>
+  <div class="grid">
+
+    <article class="card">
+      <div class="top"><h4>Spotify Podcasts</h4><span class="pill">Web + app</span></div>
+      <p class="best"><b>Best for:</b> Mainstream exclusives (Rogan, Smartless, NYT shows) in one app.</p>
+      <p class="pro"><b>Premium move:</b> Set playback to 1.2× and use "Your Episodes" as a unified queue across devices.</p>
+      <div class="link">open.spotify.com</div>
+    </article>
+
+    <article class="card">
+      <div class="top"><h4>Pocket Casts (Web)</h4><span class="pill">Free web app</span></div>
+      <p class="best"><b>Best for:</b> Power-user features: silence trimming, volume boost, custom playlists.</p>
+      <p class="pro"><b>Premium move:</b> Build a "Up Next" filter for unplayed episodes &lt;30 min — perfect commute queue auto-builder.</p>
+      <div class="link">play.pocketcasts.com</div>
+    </article>
+
+    <article class="card">
+      <div class="top"><h4>Apple Podcasts (Web)</h4><span class="pill">Web player</span></div>
+      <p class="best"><b>Best for:</b> Largest open catalog + clean discovery charts.</p>
+      <p class="pro"><b>Premium move:</b> Use Apple as your discovery layer, then copy the RSS feed into your real player to keep history portable.</p>
+      <div class="link">podcasts.apple.com</div>
+    </article>
+
+    <article class="card">
+      <div class="top"><h4>Overcast (Web Sync)</h4><span class="pill">Free, ad-supported</span></div>
+      <p class="best"><b>Best for:</b> Smart Speed + Voice Boost — chops dead air, audibly faster shows.</p>
+      <p class="pro"><b>Premium move:</b> Star episodes worth re-listening; your starred list is a personal "greatest hits" library.</p>
+      <div class="link">overcast.fm</div>
+    </article>
+
+    <article class="card">
+      <div class="top"><h4>NPR / BBC Sounds</h4><span class="pill">Public radio</span></div>
+      <p class="best"><b>Best for:</b> Journalism, deep-reporting, and ad-light long-form audio.</p>
+      <p class="pro"><b>Premium move:</b> Subscribe to one daily (Up First) + one weekly deep-dive (This American Life / In Our Time) — a balanced news diet.</p>
+      <div class="link">npr.org · bbc.co.uk/sounds</div>
+    </article>
+  </div>
+</section>
+
+<!-- BOOKS -->
+<section class="cat" id="books">
+  <h3><span class="ico">📚</span> Books</h3>
+  <p class="sub">Library cards turn into the most under-rated subscription you'll ever own.</p>
+  <div class="grid">
+
+    <article class="card">
+      <div class="top"><h4>Libby (OverDrive)</h4><span class="pill">Library card</span></div>
+      <p class="best"><b>Best for:</b> Brand-new bestsellers and audiobooks via your local library.</p>
+      <p class="pro"><b>Premium move:</b> Link 2–3 library cards (home + a partner city) — wait times effectively disappear.</p>
+      <div class="link">libbyapp.com</div>
+    </article>
+
+    <article class="card">
+      <div class="top"><h4>Project Gutenberg</h4><span class="pill">Public domain</span></div>
+      <p class="best"><b>Best for:</b> 70,000+ classics, EPUB/Kindle-ready, no account ever.</p>
+      <p class="pro"><b>Premium move:</b> Build a "to-read classics" folder on your e-reader; sync once and never need wifi again.</p>
+      <div class="link">gutenberg.org</div>
+    </article>
+
+    <article class="card">
+      <div class="top"><h4>Standard Ebooks</h4><span class="pill">Curated PD</span></div>
+      <p class="best"><b>Best for:</b> Beautifully typeset, proofread versions of public-domain books.</p>
+      <p class="pro"><b>Premium move:</b> Use this instead of Gutenberg for any classic — gets you a Penguin Classics-grade reading experience for free.</p>
+      <div class="link">standardebooks.org</div>
+    </article>
+
+    <article class="card">
+      <div class="top"><h4>Open Library (Archive.org)</h4><span class="pill">1-hour loans</span></div>
+      <p class="best"><b>Best for:</b> Out-of-print, academic, and hard-to-find titles.</p>
+      <p class="pro"><b>Premium move:</b> Use the "Read Aloud" feature to convert any borrowed book into a free audiobook in-browser.</p>
+      <div class="link">openlibrary.org</div>
+    </article>
+
+    <article class="card">
+      <div class="top"><h4>LibriVox</h4><span class="pill">Audiobooks</span></div>
+      <p class="best"><b>Best for:</b> Free audiobooks of public-domain literature, read by volunteers.</p>
+      <p class="pro"><b>Premium move:</b> Filter by 4+ star readers; download chapters as MP3 so it works in any podcast app.</p>
+      <div class="link">librivox.org</div>
+    </article>
+  </div>
+</section>
+
+<!-- GAMES -->
+<section class="cat" id="games">
+  <h3><span class="ico">🎮</span> Games</h3>
+  <p class="sub">Free-to-keep giveaways, browser arcades, and indie showcases.</p>
+  <div class="grid">
+
+    <article class="card">
+      <div class="top"><h4>Epic Games Store — Free Weekly</h4><span class="pill">Keep forever</span></div>
+      <p class="best"><b>Best for:</b> AAA and indie titles given away every Thursday — yours permanently.</p>
+      <p class="pro"><b>Premium move:</b> Set a Thursday calendar reminder; in a year you'll have a $1,000+ library at $0.</p>
+      <div class="link">store.epicgames.com/free-games</div>
+    </article>
+
+    <article class="card">
+      <div class="top"><h4>Steam — Free to Play</h4><span class="pill">F2P + demos</span></div>
+      <p class="best"><b>Best for:</b> Multiplayer giants (Dota, CS2, Warframe) + the "Next Fest" demo events.</p>
+      <p class="pro"><b>Premium move:</b> Wishlist demos during Next Fest — Steam emails you when full games launch on sale.</p>
+      <div class="link">store.steampowered.com</div>
+    </article>
+
+    <article class="card">
+      <div class="top"><h4>itch.io</h4><span class="pill">Indie</span></div>
+      <p class="best"><b>Best for:</b> Wildly original indie games, jam entries, and free experimental projects.</p>
+      <p class="pro"><b>Premium move:</b> Browse the "Free" tag sorted by Top — a guided tour of the best zero-cost indies on the web.</p>
+      <div class="link">itch.io</div>
+    </article>
+
+    <article class="card">
+      <div class="top"><h4>GOG — Free Games</h4><span class="pill">DRM-free</span></div>
+      <p class="best"><b>Best for:</b> Classic PC games that "just work" — fully DRM-free downloads.</p>
+      <p class="pro"><b>Premium move:</b> Grab giveaways during seasonal sales and back up installers offline — they'll run forever.</p>
+      <div class="link">gog.com/games?price=free</div>
+    </article>
+
+    <article class="card">
+      <div class="top"><h4>Internet Archive — Console Library</h4><span class="pill">In-browser</span></div>
+      <p class="best"><b>Best for:</b> Playing retro classics (DOS, Atari, arcade) right in the browser.</p>
+      <p class="pro"><b>Premium move:</b> Bookmark a personal "arcade" page of 10 favorites — your own free retro console.</p>
+      <div class="link">archive.org/details/internetarcade</div>
+    </article>
+  </div>
+</section>
+
+<!-- DOCUMENTARIES -->
+<section class="cat" id="docs">
+  <h3><span class="ico">🎞️</span> Documentaries</h3>
+  <p class="sub">From investigative journalism to science deep-dives — for free.</p>
+  <div class="grid">
+
+    <article class="card">
+      <div class="top"><h4>PBS Frontline</h4><span class="pill">Free, full episodes</span></div>
+      <p class="best"><b>Best for:</b> Long-form investigative journalism on politics, tech, and society.</p>
+      <p class="pro"><b>Premium move:</b> Subscribe via RSS so each new ~90-min film lands in your podcast/video app automatically.</p>
+      <div class="link">pbs.org/wgbh/frontline</div>
+    </article>
+
+    <article class="card">
+      <div class="top"><h4>DW Documentary</h4><span class="pill">YouTube</span></div>
+      <p class="best"><b>Best for:</b> International affairs, culture, and science from Germany's public broadcaster.</p>
+      <p class="pro"><b>Premium move:</b> Subscribe + ring the bell; their weekly drops cover stories U.S. media usually misses.</p>
+      <div class="link">youtube.com/@DWDocumentary</div>
+    </article>
+
+    <article class="card">
+      <div class="top"><h4>Top Documentary Films</h4><span class="pill">Aggregator</span></div>
+      <p class="best"><b>Best for:</b> Discovery — categorized index of free, legal docs across the web.</p>
+      <p class="pro"><b>Premium move:</b> Sort by rating &gt; 8.0 and bookmark a "must-watch" queue of 20 to work through monthly.</p>
+      <div class="link">topdocumentaryfilms.com</div>
+    </article>
+
+    <article class="card">
+      <div class="top"><h4>Vice Documentary (YouTube)</h4><span class="pill">YouTube</span></div>
+      <p class="best"><b>Best for:</b> Boots-on-ground reporting on subcultures, conflict zones, and underground scenes.</p>
+      <p class="pro"><b>Premium move:</b> Use the "Playlists" tab to binge themed runs (e.g., drug trade, internet culture) end-to-end.</p>
+      <div class="link">youtube.com/@VICE</div>
+    </article>
+
+    <article class="card">
+      <div class="top"><h4>NASA+ / Smithsonian Channel Free</h4><span class="pill">Institutional</span></div>
+      <p class="best"><b>Best for:</b> Space, history, and natural science docs from primary sources.</p>
+      <p class="pro"><b>Premium move:</b> Pin NASA+ live for launches; use Smithsonian's free episodes as your "Sunday Discovery Channel" replacement.</p>
+      <div class="link">plus.nasa.gov</div>
+    </article>
+  </div>
+</section>
+
+<!-- LEARNING -->
+<section class="cat" id="learning">
+  <h3><span class="ico">🧠</span> Learning</h3>
+  <p class="sub">Ivy-grade courses, language tools, and skill workshops — at $0.</p>
+  <div class="grid">
+
+    <article class="card">
+      <div class="top"><h4>Khan Academy</h4><span class="pill">K–college</span></div>
+      <p class="best"><b>Best for:</b> Math, science, SAT/AP prep, economics — structured from zero to advanced.</p>
+      <p class="pro"><b>Premium move:</b> Pick a "Course Challenge" first to skip what you already know; the system custom-builds your path.</p>
+      <div class="link">khanacademy.org</div>
+    </article>
+
+    <article class="card">
+      <div class="top"><h4>MIT OpenCourseWare</h4><span class="pill">University-level</span></div>
+      <p class="best"><b>Best for:</b> Full MIT undergrad &amp; grad courses — slides, problem sets, lecture videos.</p>
+      <p class="pro"><b>Premium move:</b> Pick one course per semester, follow the actual syllabus week-by-week — it's a free MIT audit.</p>
+      <div class="link">ocw.mit.edu</div>
+    </article>
+
+    <article class="card">
+      <div class="top"><h4>Coursera (Audit Mode)</h4><span class="pill">Audit free</span></div>
+      <p class="best"><b>Best for:</b> Stanford, Yale, Google, IBM courses — videos and readings free, certificate optional.</p>
+      <p class="pro"><b>Premium move:</b> On enrollment, click "Audit the course" to skip the paywall and access every lecture.</p>
+      <div class="link">coursera.org</div>
+    </article>
+
+    <article class="card">
+      <div class="top"><h4>YouTube EDU (CrashCourse, 3Blue1Brown, Veritasium)</h4><span class="pill">Curated channels</span></div>
+      <p class="best"><b>Best for:</b> Visually rich, 10–20 min explainers across every subject.</p>
+      <p class="pro"><b>Premium move:</b> Build a "Learn" playlist; treat it like a daily class — one episode + one page of notes = course-grade outcome.</p>
+      <div class="link">youtube.com/@crashcourse</div>
+    </article>
+
+    <article class="card">
+      <div class="top"><h4>Duolingo</h4><span class="pill">Languages</span></div>
+      <p class="best"><b>Best for:</b> Daily language practice across 40+ languages with streak gamification.</p>
+      <p class="pro"><b>Premium move:</b> Combine with free Coffee Break Languages podcasts to add real conversational context.</p>
+      <div class="link">duolingo.com</div>
+    </article>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <div class="legend">
+    <span>🎬 Movies</span><span>📺 TV</span><span>🎵 Music</span><span>🎙️ Podcasts</span>
+    <span>📚 Books</span><span>🎮 Games</span><span>🎞️ Docs</span><span>🧠 Learning</span>
+  </div>
+  Ven_ Entertainment — a curated, free &amp; legal media stack. All trademarks belong to their respective owners.
+</footer>
+
+</body>
+</html>
