@@ -2,8 +2,11 @@ name: Release
 
 on:
   push:
-    tags:
-      - "v*"
+    branches:
+      - claude/entertainment-dashboard-Abzt0
+      - main
+    paths:
+      - VERSION
   workflow_dispatch:
     inputs:
       version:
@@ -17,13 +20,19 @@ permissions:
 jobs:
   release:
     runs-on: ubuntu-latest
-    env:
-      VERSION: ${{ github.event_name == 'workflow_dispatch' && inputs.version || github.ref_name }}
     steps:
       - uses: actions/checkout@v4
 
+      - name: Resolve version
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            echo "VERSION=${{ inputs.version }}" >> "$GITHUB_ENV"
+          else
+            echo "VERSION=$(cat VERSION)" >> "$GITHUB_ENV"
+          fi
+
       - name: Package app
-        run: zip -r ven-entertainment-${VERSION}.zip index.html README.md
+        run: zip -r "ven-entertainment-${VERSION}.zip" index.html README.md
 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
