@@ -1,12 +1,22 @@
 # Ven_ Entertainment
 
-A free + legal entertainment dashboard for laptops. One single-file HTML page
-that organizes 40 curated services across 8 categories: **Movies, TV, Music,
-Podcasts, Books, Games, Documentaries, Learning**.
+A free + legal entertainment dashboard for laptops, built as a single-file
+web app with live previews. It organizes 40 curated services across
+8 categories: **Movies, TV, Music, Podcasts, Books, Games, Documentaries,
+Learning**.
 
-Each platform card explains:
-- **What it's best for** — the niche it actually wins at.
-- **The "premium move"** — how to use the free tier like a paid service.
+Features:
+- **App shell** — sidebar navigation with per-category counts.
+- **Live preview** — click any tile to open the service embedded in a
+  preview pane (with an open-in-new-tab fallback for sites that block
+  embedding).
+- **Search** — press `/` and filter all 40 platforms by name, tag, or
+  description.
+- **Favorites** — star platforms into a persistent Favorites shelf
+  (stored in localStorage).
+- **Surprise me** — opens a random platform from the current view.
+- Every platform includes **what it's best for** and a **"premium move"**
+  tip for using the free tier like a paid service.
 
 ## Run it
 
