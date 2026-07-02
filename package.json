@@ -1,0 +1,12 @@
+{
+  "name": "ven-entertainment",
+  "version": "2.0.0",
+  "private": true,
+  "description": "Free & legal entertainment dashboard — single-file web app with live previews",
+  "scripts": {
+    "start": "serve . -l tcp://0.0.0.0:${PORT:-3000}"
+  },
+  "dependencies": {
+    "serve": "^14.2.6"
+  }
+}

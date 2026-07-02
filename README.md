@@ -18,6 +18,20 @@ Features:
 - Every platform includes **what it's best for** and a **"premium move"**
   tip for using the free tier like a paid service.
 
+## Deploy to Railway
+
+[![Deploy on Railway](https://railway.com/button.svg)](https://railway.com/new/template?template=https%3A%2F%2Fgithub.com%2Farihov%2Fentertainment)
+
+The repo is pre-configured for Railway (`railway.json` + `package.json`):
+Nixpacks detects Node, installs [`serve`](https://www.npmjs.com/package/serve),
+and `npm start` binds it to Railway's injected `$PORT`.
+
+1. Click the button above (or go to [railway.com/new](https://railway.com/new)
+   → **Deploy from GitHub repo** → pick `arihov/entertainment`).
+2. After the first deploy, open the service → **Settings → Networking →
+   Generate Domain** to get your public `*.up.railway.app` URL.
+3. Every push to the default branch auto-redeploys.
+
 ## Run it
 
 Either open `index.html` directly in a browser, or serve it locally:
