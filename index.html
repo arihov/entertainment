@@ -20,6 +20,17 @@
     --shadow:0 12px 34px rgba(0,0,0,.4);
     --side-w:264px;
   }
+  :root[data-theme="light"]{
+    --bg:#f4f5f9;
+    --side:#ffffff;
+    --panel:#ffffff;
+    --panel-2:#eef0f6;
+    --line:#dfe3ee;
+    --text:#161a24;
+    --muted:#5b6478;
+    --pill:#eef0f7;
+    --shadow:0 12px 30px rgba(20,24,45,.09);
+  }
   *{box-sizing:border-box}
   html,body{margin:0;height:100%;background:var(--bg);color:var(--text);
     font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Inter,Helvetica,Arial,sans-serif;
@@ -69,6 +80,17 @@
 
   .side-foot{margin-top:auto;color:var(--muted);font-size:11px;padding:8px 6px;border-top:1px solid var(--line)}
   .side-foot b{color:#9ef0b6;font-weight:600}
+  .side-label{color:var(--muted);font-size:10.5px;letter-spacing:1.4px;text-transform:uppercase;padding:10px 8px 4px}
+  .side-tools{display:flex;flex-wrap:wrap;gap:6px;padding:0 2px}
+  .side-tools .btn{padding:6px 10px;font-size:12px}
+
+  .toast{
+    position:fixed;bottom:22px;left:50%;transform:translateX(-50%) translateY(14px);
+    background:var(--panel-2);border:1px solid var(--line);color:var(--text);
+    padding:10px 18px;border-radius:10px;font-size:13px;box-shadow:var(--shadow);
+    opacity:0;pointer-events:none;transition:opacity .2s ease,transform .2s ease;z-index:100;
+  }
+  .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
 
   /* ============ MAIN ============ */
   main{flex:1;min-width:0;padding:26px 30px 60px}
@@ -89,6 +111,7 @@
     transition:transform .13s ease,border-color .13s ease;cursor:pointer;
   }
   .tile:hover{transform:translateY(-3px);border-color:#3a4763}
+  .tile:focus-visible{outline:2px solid var(--accent-2);outline-offset:2px}
   .tile .row1{display:flex;align-items:center;gap:10px}
   .mono{
     width:40px;height:40px;border-radius:10px;flex-shrink:0;display:grid;place-items:center;
@@ -168,6 +191,7 @@
     <div class="brand">
       <div class="logo">V</div>
       <div><b>Ven_ Entertainment</b><small>Free &amp; legal command center</small></div>
+      <button class="btn x" id="themeBtn" title="Toggle light / dark theme" style="margin-left:auto">🌙</button>
     </div>
 
     <div class="search">
@@ -181,8 +205,15 @@
       <!-- category buttons injected -->
     </nav>
 
+    <div class="side-label">Favorites</div>
+    <div class="side-tools">
+      <button class="btn" id="exportBtn" title="Export your favorites as a JSON file">⬇ Export</button>
+      <button class="btn" id="importBtn" title="Import favorites from a JSON file">⬆ Import</button>
+      <input type="file" id="importFile" accept="application/json" hidden>
+    </div>
+
     <div class="side-foot">
-      <b>100% free + legal</b> · 8 categories · 40 platforms<br/>
+      <b>100% free + legal</b> · <span id="foot-counts"></span><br/>
       Click any tile to preview it live.
     </div>
   </aside>
@@ -193,7 +224,10 @@
         <h1 id="cat-title"></h1>
         <p id="cat-blurb"></p>
       </div>
-      <button class="surprise" id="surprise">🎲 Surprise me</button>
+      <div style="display:flex;gap:8px;align-items:center">
+        <button class="btn" id="sortBtn">↕ Sort A–Z</button>
+        <button class="surprise" id="surprise">🎲 Surprise me</button>
+      </div>
     </div>
     <div class="grid" id="grid"></div>
     <div class="empty" id="empty" hidden>No platforms match your search.</div>
@@ -208,6 +242,7 @@
       <div class="t"><b id="pv-name"></b><small id="pv-tag"></small></div>
       <div class="pv-actions">
         <button class="btn" id="pv-fav">☆ Favorite</button>
+        <button class="btn" id="pv-copy">🔗 Copy link</button>
         <a class="btn primary" id="pv-open" target="_blank" rel="noopener">Open in new tab ↗</a>
         <button class="btn x" id="pv-close" title="Close (Esc)">✕</button>
       </div>
@@ -229,6 +264,7 @@
 <script>
 const CATS = {
   favs:     {ic:"⭐", label:"Favorites",     blurb:"Your starred platforms, all in one shelf."},
+  recent:   {ic:"🕘", label:"Recently Viewed", blurb:"The last platforms you previewed — jump straight back in."},
   movies:   {ic:"🎬", label:"Movies",        blurb:"Ad-supported streamers and public-domain libraries that rival paid services."},
   tv:       {ic:"📺", label:"TV Shows",      blurb:"Catch-up portals from major networks plus ad-supported on-demand giants."},
   music:    {ic:"🎵", label:"Music",         blurb:"From free Spotify tiers to artist-owned platforms and worldwide radio."},
@@ -237,9 +273,13 @@ const CATS = {
   games:    {ic:"🎮", label:"Games",         blurb:"Free-to-keep giveaways, browser arcades, and indie showcases."},
   docs:     {ic:"🎞️", label:"Documentaries", blurb:"Investigative journalism and science deep-dives — for free."},
   learning: {ic:"🧠", label:"Learning",      blurb:"Ivy-grade courses, language tools, and skill workshops at $0."},
+  live:     {ic:"📡", label:"Live TV & News", blurb:"Free ad-supported live channels and rolling news — no cable box required."},
+  anime:    {ic:"🍥", label:"Anime & Kids",  blurb:"Ad-supported anime simulcasts and family-safe libraries, zero subscription."},
 };
 
-const HUES = {movies:265, tv:200, music:330, podcasts:25, books:145, games:0, docs:50, learning:180};
+const META_CATS = ["favs","recent"];
+
+const HUES = {movies:265, tv:200, music:330, podcasts:25, books:145, games:0, docs:50, learning:180, live:210, anime:305};
 
 const DATA = [
  // MOVIES
@@ -377,11 +417,46 @@ const DATA = [
  {cat:"learning", name:"Duolingo", tag:"Languages", url:"https://www.duolingo.com",
   best:"Daily practice across 40+ languages with streak gamification.",
   pro:"Combine with free Coffee Break Languages podcasts for real conversational context."},
+
+ // LIVE TV & NEWS
+ {cat:"live", name:"Xumo Play", tag:"Live + on-demand", url:"https://www.xumo.tv",
+  best:"200+ free live channels spanning news, sports, and classic TV.",
+  pro:"Use the guide's Favorites row to build a 10-channel lineup — it remembers your picks between visits."},
+ {cat:"live", name:"Samsung TV Plus", tag:"Free live channels", url:"https://www.samsungtvplus.com",
+  best:"Wide channel guide covering entertainment, true crime, and kids blocks.",
+  pro:"Works in any browser even without a Samsung TV — bookmark the web guide as a lightweight cable replacement."},
+ {cat:"live", name:"Haystack News", tag:"Local + national", url:"https://haystacknews.com",
+  best:"Hyper-local news stitched together with national coverage, zero login.",
+  pro:"Set your city once — the algorithm blends local weather and traffic with national headlines automatically."},
+ {cat:"live", name:"Local Now", tag:"News + weather", url:"https://www.localnow.com",
+  best:"Local news, weather radar, and regional lifestyle programming.",
+  pro:"Pair with a national outlet for a full-picture morning briefing routine."},
+ {cat:"live", name:"ABC News Live", tag:"24/7 news stream", url:"https://abcnews.go.com/live",
+  best:"Rolling breaking-news coverage and live event simulcasts.",
+  pro:"Keep it pinned in a browser tab during major events — it cuts to live coverage automatically."},
+
+ // ANIME & KIDS
+ {cat:"anime", name:"Crunchyroll", tag:"Free, ad-supported", url:"https://www.crunchyroll.com",
+  best:"Simulcast anime the same week it airs in Japan, plus a huge back-catalog.",
+  pro:"The free tier gets new episodes a week after Premium — queue a watchlist and you'll barely notice the delay."},
+ {cat:"anime", name:"Tubi Kids", tag:"Ad-supported", url:"https://tubitv.com/kids",
+  best:"A locked-down kids hub inside Tubi — cartoons and family movies, no mature content.",
+  pro:"Bookmark the /kids URL directly on a tablet's home screen — it opens straight into the walled-off library."},
+ {cat:"anime", name:"PBS Kids", tag:"Public broadcaster", url:"https://pbskids.org",
+  best:"Ad-free educational cartoons built for early childhood.",
+  pro:"Fully ad-free with no account needed — the safest hands-off option for young kids."},
+ {cat:"anime", name:"Cartoon Network", tag:"Full episodes", url:"https://www.cartoonnetwork.com",
+  best:"Current-season episodes of flagship CN shows, free the day after they air.",
+  pro:"No login wall for most episodes — check back weekly since the library rotates."},
+ {cat:"anime", name:"Popcornflix Kids", tag:"Ad-supported", url:"https://www.popcornflix.com",
+  best:"Family movies and animated series bundled into one free hub.",
+  pro:"Use the Kids rail specifically — the main site mixes in general-audience titles."},
 ];
 
 /* ---------- state ---------- */
-let state = { cat:"movies", q:"" };
+let state = { cat:"movies", q:"", sort:"default" };
 let favs = new Set(JSON.parse(localStorage.getItem("ven-favs") || "[]"));
+let recent = JSON.parse(localStorage.getItem("ven-recent") || "[]").filter(n => DATA.some(d => d.name === n));
 let current = null;
 
 const $ = id => document.getElementById(id);
@@ -391,29 +466,45 @@ const monoStyle = it =>
 const initials = n => n.split(/\s+/).map(w=>w[0]).join("").replace(/[^A-Za-z0-9]/g,"").slice(0,2).toUpperCase();
 
 function saveFavs(){ localStorage.setItem("ven-favs", JSON.stringify([...favs])); }
+function trackRecent(name){
+  recent = recent.filter(n => n !== name);
+  recent.unshift(name);
+  recent = recent.slice(0, 8);
+  localStorage.setItem("ven-recent", JSON.stringify(recent));
+}
 
 /* ---------- sidebar ---------- */
 function renderNav(){
   const nav = $("nav");
   nav.querySelectorAll(".nav-btn").forEach(b=>b.remove());
   for(const key of Object.keys(CATS)){
-    const count = key==="favs" ? favs.size : DATA.filter(d=>d.cat===key).length;
-    if(key==="favs" && count===0 && state.cat!=="favs") continue;
+    const count = key==="favs" ? favs.size : key==="recent" ? recent.length : DATA.filter(d=>d.cat===key).length;
+    if(META_CATS.includes(key) && count===0 && state.cat!==key) continue;
     const b = document.createElement("button");
     b.className = "nav-btn" + (state.cat===key ? " active" : "");
     b.innerHTML = `<span class="ic">${CATS[key].ic}</span>${CATS[key].label}<span class="n">${count}</span>`;
     b.onclick = () => { state.cat = key; state.q=""; $("q").value=""; render(); };
     nav.appendChild(b);
   }
+  $("foot-counts").textContent =
+    `${Object.keys(CATS).length - META_CATS.length} categories · ${DATA.length} platforms`;
 }
 
 /* ---------- grid ---------- */
 function visibleItems(){
   const q = state.q.trim().toLowerCase();
-  if(q) return DATA.filter(d =>
-    (d.name+" "+d.tag+" "+d.best+" "+d.pro+" "+CATS[d.cat].label).toLowerCase().includes(q));
-  if(state.cat==="favs") return DATA.filter(d=>favs.has(d.name));
-  return DATA.filter(d=>d.cat===state.cat);
+  let items;
+  if(q){
+    items = DATA.filter(d =>
+      (d.name+" "+d.tag+" "+d.best+" "+d.pro+" "+CATS[d.cat].label).toLowerCase().includes(q));
+  } else if(state.cat==="favs"){
+    items = DATA.filter(d=>favs.has(d.name));
+  } else if(state.cat==="recent"){
+    items = recent.map(n=>DATA.find(d=>d.name===n)).filter(Boolean);
+  } else {
+    items = DATA.filter(d=>d.cat===state.cat);
+  }
+  return state.sort==="az" ? [...items].sort((a,b)=>a.name.localeCompare(b.name)) : items;
 }
 
 function renderGrid(){
@@ -469,6 +560,8 @@ function openPreview(it){
   $("pv-open").href = it.url;
   $("pv-frame").src = it.url;
   syncPvFav();
+  trackRecent(it.name);
+  renderNav();
   $("overlay").classList.add("open");
   document.body.style.overflow = "hidden";
 }
@@ -483,15 +576,108 @@ function closePreview(){
   current = null;
 }
 
+/* ---------- toast ---------- */
+let toastTimer;
+function toast(msg){
+  let el = $("toast");
+  if(!el){
+    el = document.createElement("div");
+    el.id = "toast";
+    el.className = "toast";
+    document.body.appendChild(el);
+  }
+  el.textContent = msg;
+  el.classList.add("show");
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => el.classList.remove("show"), 2200);
+}
+
+/* ---------- theme ---------- */
+function applyTheme(t){
+  document.documentElement.setAttribute("data-theme", t === "light" ? "light" : "dark");
+  localStorage.setItem("ven-theme", t);
+  $("themeBtn").textContent = t === "light" ? "🌙" : "☀️";
+}
+applyTheme(localStorage.getItem("ven-theme") || "dark");
+$("themeBtn").onclick = () => {
+  applyTheme(document.documentElement.getAttribute("data-theme") === "light" ? "dark" : "light");
+};
+
+/* ---------- sort ---------- */
+$("sortBtn").onclick = () => {
+  state.sort = state.sort === "default" ? "az" : "default";
+  $("sortBtn").textContent = state.sort === "az" ? "↕ Default order" : "↕ Sort A–Z";
+  renderGrid();
+};
+
+/* ---------- export / import favorites ---------- */
+$("exportBtn").onclick = () => {
+  const blob = new Blob([JSON.stringify([...favs], null, 2)], {type:"application/json"});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url; a.download = "ven-favorites.json";
+  a.click();
+  URL.revokeObjectURL(url);
+  toast("Favorites exported");
+};
+$("importBtn").onclick = () => $("importFile").click();
+$("importFile").addEventListener("change", e => {
+  const file = e.target.files[0];
+  if(!file) return;
+  const reader = new FileReader();
+  reader.onload = () => {
+    try{
+      const arr = JSON.parse(reader.result);
+      if(!Array.isArray(arr)) throw new Error("bad format");
+      const valid = new Set(DATA.map(d=>d.name));
+      let added = 0;
+      arr.forEach(n => { if(valid.has(n) && !favs.has(n)){ favs.add(n); added++; } });
+      saveFavs(); render();
+      toast(`Imported ${added} favorite${added===1?"":"s"}`);
+    }catch(err){
+      toast("Couldn't read that favorites file");
+    }
+  };
+  reader.readAsText(file);
+  e.target.value = "";
+});
+
 $("pv-close").onclick = closePreview;
 $("pv-fav").onclick = () => current && toggleFav(current.name);
+$("pv-copy").onclick = () => {
+  if(!current) return;
+  navigator.clipboard.writeText(current.url)
+    .then(() => toast("Link copied"))
+    .catch(() => toast("Couldn't copy link"));
+};
 $("overlay").addEventListener("click", e => { if(e.target === $("overlay")) closePreview(); });
 
 /* ---------- search + shortcuts ---------- */
+$("q").placeholder = `Search ${DATA.length} platforms…`;
 $("q").addEventListener("input", e => { state.q = e.target.value; render(); });
 document.addEventListener("keydown", e => {
   if(e.key === "Escape") closePreview();
   if(e.key === "/" && document.activeElement !== $("q")){ e.preventDefault(); $("q").focus(); }
+  if(["ArrowRight","ArrowLeft","ArrowDown","ArrowUp"].includes(e.key)){
+    const active = document.activeElement;
+    if(!active || !active.classList.contains("tile")) return;
+    const tiles = [...document.querySelectorAll("#grid .tile")];
+    const idx = tiles.indexOf(active);
+    if(idx === -1) return;
+    e.preventDefault();
+    let cols = tiles.length;
+    if(tiles.length > 1){
+      const top0 = tiles[0].offsetTop;
+      const diffIdx = tiles.findIndex(t => t.offsetTop !== top0);
+      if(diffIdx > 0) cols = diffIdx;
+    }
+    let next = idx;
+    if(e.key === "ArrowRight") next = idx + 1;
+    else if(e.key === "ArrowLeft") next = idx - 1;
+    else if(e.key === "ArrowDown") next = idx + cols;
+    else if(e.key === "ArrowUp") next = idx - cols;
+    if(tiles[next]) tiles[next].focus();
+  }
 });
 
 /* ---------- surprise ---------- */
